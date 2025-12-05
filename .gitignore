@@ -1,1 +1,4 @@
 project files/*
+*.mlmodel
+*.mlproj/*
+.DS_Store
