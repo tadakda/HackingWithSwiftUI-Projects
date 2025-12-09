@@ -20,11 +20,17 @@ struct ContentView: View {
         // lowercase and trim the word, to make sure we don't add duplicate words with case differences
         let answer = newWord.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
         
+        // exit if string is shorter than 3 letters or same as rootWord
+        guard answer.count >= 3, answer != rootWord else {
+            wordError(title: "Word too short or same as root word", message: "Try again!")
+            return
+        }
+        
         // exit if the remaining string is empty
         guard answer.count > 0 else { return }
         
         guard isOriginal(word: answer) else {
-            wordError(title: " Word used already", message: "Be more original...")
+            wordError(title: "Word used already", message: "Be more original...")
             return
         }
         
@@ -118,6 +124,11 @@ struct ContentView: View {
             .onAppear(perform: startGame)
             .alert(errorTitle, isPresented: $showingError) { } message: {
                 Text(errorMessage)
+            }
+            .toolbar() {
+                Button("Reset") {
+                    startGame()
+                }
             }
         }
         
