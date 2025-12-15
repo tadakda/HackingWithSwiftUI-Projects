@@ -18,6 +18,8 @@ struct ContentView: View {
     @State private var correctAnswer: Int = Int.random(in: 0...2)
     @State private var remainingQuestions: Int
     
+    @State private var selectedFlag: Int? = nil
+    
     init() {
         self.remainingQuestions = NUM_OF_QUESTIONS
     }
@@ -51,10 +53,16 @@ struct ContentView: View {
                     
                     ForEach(0..<3) { number in
                         Button {
+                            withAnimation(.bouncy) {
+                                selectedFlag = number
+                            }
                             flagTapped(number)
                         } label: {
                             FlagImage(countries[number])
                         }
+                        .rotation3DEffect(.degrees(selectedFlag == number ? 360 : 0), axis: (x: 0, y: 1, z: 0))
+                        .opacity(selectedFlag == number || selectedFlag == nil ? 1.0 : 0.25)
+                        .scaleEffect(selectedFlag != nil && selectedFlag != number ? 0.5 : 1.0)
                     }
                 }
                 .frame(maxWidth: .infinity)
@@ -93,6 +101,7 @@ struct ContentView: View {
         }
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
+        selectedFlag = nil
     }
     
     func flagTapped(_ number: Int) {
